@@ -1,0 +1,181 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Payment Campaign URL Builder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Grenze:400,500,600,700&display=swap" rel="stylesheet">
+    <style>
+        .container {
+            width: 100%;
+            max-width: 780px;
+            margin: 1em auto;
+            border-radius: 5px;
+            background-color: #f7f7f9;
+        }
+
+        textarea {
+
+            margin: 0 0 2em;
+        }
+
+        .heading {
+            padding: 10px;
+            margin: 0 -15px 30px;
+            background-color: #FDFEFE;
+            font-family: 'Grenze', serif;
+            font-size: 32px;
+            font-weight: 600;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="heading text-center">
+            <h2>Campaign URL Builder</h2>
+        </div>
+        <form>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Website URL</label>
+                    <select class="form-control" name="site">
+                        <option value="https://www.payment.filerightlive.com">FileRight</option>
+                        <option value="https://www.us-immigration.com">Us-Immigration.com</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Login Options</label>
+                    <select class="form-control" name="loginParam">
+                        <option value="">Select Login Options</option>
+                        <option value="/ecommerce/pay.do?">pay.do</option>
+                        <option value="/application-center/applicationcenter.do">applicationcenter.do</option>
+                        <option value="/registration/autologin.do?">autologin.do</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Product Name</label>
+                    <select class="form-control" name="product">
+                        <option value="">Select Product Name</option>
+                        <option value="application=i90&">I90</option>
+                        <option value="application=n400&">N400</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Next Action</label>
+                    <select class="form-control" name="next">
+                        <option value="">Select Next Action</option>
+                        <option value="next=/application-center/applicationcenter.do">ApplicationCenter</option>
+                        <option value="next=/ecommerce/cart.do">Payment</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>PromoCode</label>
+                    <input class="form-control" name="promo" id="promo" />
+                </div>
+
+
+                <div class="form-group col-md-6">
+                    <label>Referer Id</label>
+                    <input class="form-control" name="ref" id="ref" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>Campaign Source</label>
+                    <input class="form-control" name="utm_source" id="utm_source" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Campaign Medium</label>
+                    <input class="form-control" name="utm_medium" id="utm_medium" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Campaign Name</label>
+                    <input class="form-control" name="utm_campaign" id="utm_campaign" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Campaign Term</label>
+                    <input class="form-control" name="utm_term" id="utm_term" />
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Campaign Content</label>
+                    <input class="form-control" name="utm_content" id="utm_content" />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label>EMail Pattern</label>
+                    <input class="form-control" name="email" id="email" />
+                </div>
+
+            </div>
+        </form>
+        <div class="form-row">
+            <textarea id="results" placeholder="Result" class="form-control col-xs-12 col-sm-11"></textarea>
+            <div class="text-right col-sm-1 align-middle">
+                <button onclick="copyURL()" class="btn btn-primary"> <i class="fa fa-copy"></i></button></div>
+        </div>
+    </div>
+
+    <script>
+
+        $(":input").change(function () {
+
+            let fields = $(":input").serializeArray();
+            $("#results").empty();
+
+            jQuery.each(fields, function (i, field) {
+
+                if ((field.name == 'promo') && field.value != '') {
+                    field.value = `&promoCode=${field.value}&`;
+                }
+
+                if ((field.name == 'ref') && field.value != '') {
+                    field.value = `r=${field.value}&`;
+                }
+
+                if ((field.name.includes('utm')) && field.value != '') {
+
+                    if (field.name.includes('utm_source')) {
+                        field.value = `tp=${field.name}=${field.value};`;
+                    } else {
+                        field.value = `${field.name}=${field.value};`
+                    }
+                }
+
+                if ((field.name == 'email') && field.value != '') {
+                    field.value = `&emailId=${field.value}`;
+                }
+
+
+                $("#results").append(field.value);
+            });
+        });
+
+        function copyURL() {
+            $('#results').select();
+            document.execCommand("copy");
+        }
+
+
+
+    </script>
+
+    <!-- let isPayURL = $('[name="loginParam"]').val().includes('pay.do');
+            
+            if(isPayURL){
+                $('#campaign_param').show();
+             } -->
+
+</body>
+
+
+
+</html>
